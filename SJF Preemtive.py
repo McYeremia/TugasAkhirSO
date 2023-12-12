@@ -1,10 +1,7 @@
-# TUGAS KITA 
-
 import tkinter as tk
 from tkinter import ttk
 from tkinter import simpledialog
 
-# Sini
 class SFJPreemtive:
 
     def __init__(self, processes):
@@ -71,7 +68,6 @@ class SFJPreemtive:
         AWT = total_wt / n
         ATAT = total_tat / n
         return akhir, AWT, ATAT
-# Sini
 
 def center_window(window, width, height):
     screen_width = window.winfo_screenwidth()
