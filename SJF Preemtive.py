@@ -119,27 +119,44 @@ class ProgramSJFPreemtive:
     def run_simulation(self):
         self.processes = []
         num_processes = self.jumlahproses.get()
-        
+        jalan = True
+
         for i in range(num_processes):
-            arrival_time = int(CustomInputDialog(root,title=(f"Arrival Time Proses {i + 1}"),prompt="Masukan Arrival Time :").result)
-            burst_time = int(CustomInputDialog(root,title=(f"Burst Time Proses {i + 1}"),prompt="Masukan Burst Time :").result)
-            self.processes.append([i + 1, arrival_time, burst_time]) 
+            arrival_time = (CustomInputDialog(root,title=(f"Arrival Time Proses {i + 1}"),prompt="Masukan Arrival Time :").result)
+            try:
+                arrival_time = int(arrival_time)
+                burst_time = (CustomInputDialog(root,title=(f"Burst Time Proses {i + 1}"),prompt="Masukan Burst Time :").result)
+                try:
+                    burst_time =int(burst_time)
+                    self.processes.append([i + 1, arrival_time, burst_time]) 
+                except:
+                    jalan = False
+                    break
+            except:
+                jalan = False
+                break
+        if jalan:
+            sfj = SFJPreemtive(self.processes)
+            akhir, AWT, ATA = sfj.findavgTime(self.processes, num_processes)
 
-        sfj = SFJPreemtive(self.processes)
-        akhir, AWT, ATA = sfj.findavgTime(self.processes, num_processes)
+            result_str = "\nHASIL PERHITUNGAN\n\n"
+            result_str += "Processes\t     Burst Time\t  Waiting Time\t   Turn-Around Time\n\n"
+            for i in akhir:
+                result_str += f"    P{i[0]}\t\t{i[1]}\t  {i[2]}\t\t{i[3]}\n"
+            result_str += "\n"
+            result_str += f"\nAverage Waiting Time: {AWT:.2f}"
+            result_str += f"\nAverage Turn Around Time: {ATA:.2f}"
 
-        result_str = "\nHASIL PERHITUNGAN\n\n"
-        result_str += "Processes\tBurst Time\tWaiting Time\tTurn-Around Time\n\n"
-        for i in akhir:
-            result_str += f"    P{i[0]}\t\t{i[1]}\t  {i[2]}\t\t  {i[3]}\n"
-        result_str += "\n"
-        result_str += f"\nAverage Waiting Time: {AWT:.2f}"
-        result_str += f"\nAverage Turn Around Time: {ATA:.2f}"
-
-        self.result_text.config(state=tk.NORMAL)
-        self.result_text.delete(1.0, tk.END)
-        self.result_text.insert(tk.END, result_str)
-        self.result_text.config(state=tk.DISABLED)
+            self.result_text.config(state=tk.NORMAL)
+            self.result_text.delete(1.0, tk.END)
+            self.result_text.insert(tk.END, result_str)
+            self.result_text.config(state=tk.DISABLED)
+        else:
+            result_str = "\nPROGRAM TELAH DIHENTIKAN ATAU TERJADI KESALAHAN INPUT\n\n"
+            self.result_text.config(state=tk.NORMAL)
+            self.result_text.delete(1.0, tk.END)
+            self.result_text.insert(tk.END, result_str)
+            self.result_text.config(state=tk.DISABLED)
 
 
 root = tk.Tk()
