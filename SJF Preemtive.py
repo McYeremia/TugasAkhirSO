@@ -1,7 +1,10 @@
+# TUGAS KITA 
+
 import tkinter as tk
 from tkinter import ttk
 from tkinter import simpledialog
 
+# Sini
 class SFJPreemtive:
 
     def __init__(self, processes):
@@ -48,7 +51,7 @@ class SFJPreemtive:
 
     def findTurnAroundTime(self, processes, n, wt, tat):
         for i in range(n):
-            tat[i] = processes[i][2] + wt[i]
+            tat[i] = wt[i] - processes[i][2]
 
     def findavgTime(self, processes, n):
         wt = [0] * n
@@ -63,11 +66,12 @@ class SFJPreemtive:
         for i in range(n):
             total_wt = total_wt + wt[i]
             total_tat = total_tat + tat[i]
-            akhir.append([processes[i][0], processes[i][2], wt[i], tat[i]]) 
+            akhir.append([processes[i][0], processes[i][2], tat[i], wt[i]]) 
 
         AWT = total_wt / n
         ATAT = total_tat / n
         return akhir, AWT, ATAT
+# Sini
 
 def center_window(window, width, height):
     screen_width = window.winfo_screenwidth()
@@ -127,7 +131,7 @@ class ProgramSJFPreemtive:
                 arrival_time = int(arrival_time)
                 burst_time = (CustomInputDialog(root,title=(f"Burst Time Proses {i + 1}"),prompt="Masukan Burst Time :").result)
                 try:
-                    burst_time =int(burst_time)
+                    burst_time = int(burst_time)
                     self.processes.append([i + 1, arrival_time, burst_time]) 
                 except:
                     jalan = False
