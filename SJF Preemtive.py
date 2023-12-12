@@ -113,11 +113,13 @@ class ProgramSJFPreemtive:
         new_font = (font_family, 12)
         self.result_text.configure(font=new_font)
         self.result_text.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
+        result_str = "\nArrival Time => Waktu kedatangan proses\n\nBurst Time => Waktu yang dibutuhkan untuk menyelesaikan proses\n\n"
+        self.result_text.insert(tk.END, result_str)
 
     def run_simulation(self):
         self.processes = []
         num_processes = self.jumlahproses.get()
-        result_str = "Arrival Time => Waktu kedatangan proses\nBurst Time => Waktu yang dibutuhkan untuk menyelesaikan proses\n\n"
+        
         for i in range(num_processes):
             arrival_time = int(CustomInputDialog(root,title=(f"Arrival Time Proses {i + 1}"),prompt="Masukan Arrival Time :").result)
             burst_time = int(CustomInputDialog(root,title=(f"Burst Time Proses {i + 1}"),prompt="Masukan Burst Time :").result)
@@ -126,7 +128,7 @@ class ProgramSJFPreemtive:
         sfj = SFJPreemtive(self.processes)
         akhir, AWT, ATA = sfj.findavgTime(self.processes, num_processes)
 
-        result_str += "\n\nHASIL PERHITUNGAN\n\n"
+        result_str = "\nHASIL PERHITUNGAN\n\n"
         result_str += "Processes\tBurst Time\tWaiting Time\tTurn-Around Time\n\n"
         for i in akhir:
             result_str += f"    P{i[0]}\t\t{i[1]}\t  {i[2]}\t\t  {i[3]}\n"
@@ -141,6 +143,6 @@ class ProgramSJFPreemtive:
 
 
 root = tk.Tk()
-center_window(root, 565, 650)
+center_window(root, 565, 615)
 app = ProgramSJFPreemtive(root)
 root.mainloop() 
