@@ -66,8 +66,45 @@ class SFJPreemtive:
             akhir.append([processes[i][0], processes[i][2], tat[i], wt[i]]) 
 
         AWT = total_wt / n
-        ATAT = total_tat / n
-        return akhir, AWT, ATAT
+        ATA = total_tat / n
+        return akhir, AWT, ATA
+
+    def getProcessOrder(self, processes, n):
+        order = []
+        rt = [0] * n
+
+        for i in range(n):
+            rt[i] = processes[i][2]
+        t = 0
+        minm = 999999999
+        short = 0
+        check = False
+        complete = 0
+
+        while (complete != n):
+            for j in range(n):
+                if ((processes[j][1] <= t) and
+                        (rt[j] < minm) and rt[j] > 0):
+                    minm = rt[j]
+                    short = j
+                    check = True
+            if (check == False):
+                t += 1
+                continue
+
+            rt[short] -= 1
+            minm = rt[short]
+            if (minm == 0):
+                minm = 999999999
+
+            if (rt[short] == 0):
+                complete += 1
+                check = False
+                order.append(processes[short][0])
+            t += 1
+
+        return order
+
 
 def center_window(window, width, height):
     screen_width = window.winfo_screenwidth()
@@ -137,15 +174,22 @@ class ProgramSJFPreemtive:
                 break
         if jalan:
             sfj = SFJPreemtive(self.processes)
-            akhir, AWT, ATA = sfj.findavgTime(self.processes, num_processes)
+            akhir, ATA, AWT = sfj.findavgTime(self.processes, num_processes)
+            urutan = []
 
             result_str = "\nHASIL PERHITUNGAN\n\n"
             result_str += "Processes\t     Burst Time\t  Waiting Time\t   Turn-Around Time\n\n"
             for i in akhir:
                 result_str += f"    P{i[0]}\t\t{i[1]}\t  {i[2]}\t\t{i[3]}\n"
+                urutan.append(i[2])
+
             result_str += "\n"
             result_str += f"\nAverage Waiting Time: {AWT:.2f}"
             result_str += f"\nAverage Turn Around Time: {ATA:.2f}"
+        
+            urutan_proses = sfj.getProcessOrder(self.processes, num_processes)
+            result_str += f"\nUrutan proses yang selesai terlebih dahulu: {' -> '.join(['P' + str(p) for p in urutan_proses])}\n\n"
+
 
             self.result_text.config(state=tk.NORMAL)
             self.result_text.delete(1.0, tk.END)
